@@ -1,2 +1,9 @@
 # rpg_py
-RPG em Python
+RPG
+
+
+RPG em Python desenvolvido para a disiplina de Programação Orientada a Objetos.
+
+Gabriel Bianchin
+Gabriel Rios
+Pedro Cezarini
