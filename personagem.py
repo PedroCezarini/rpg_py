@@ -1,15 +1,27 @@
-class Personagem(object): # Construtor superclasse
-    def __init__(self, name, life, mana, attack):
+class Personagem:
+    def __init__(self, name, life, attack_type):
         self.name = name
         self.life = life
-        self.attack = attack
-        self.mana = mana
+        self.attack_type = attack_type
 
-class Inimigo(Personagem): # Construtor sub
-    def __init__(self, name, life, attack):
-        super().__init__(name, life, attack)  # Chama o construtor da superclasse Personagem
+class Mago(Personagem):
+    def __init__(self, name):
+        super().__init__(name, 70, ["Bola de fogo", "Espinho de gelo", "Missel arcano"])
+
+class Guerreiro(Personagem):
+    def __init__(self, name):
+        super().__init__(name, 100, ["Golpe giratório", "Golpe perfurante", "Fura bucho"])
+
+class Ladino(Personagem):
+    def __init__(self, name):
+        super().__init__(name, 80, ["Ataque das sombras", "Golpe fantasma", "Lâmina das trevas"])
+        
+
+class Inimigo(Personagem):
+    def __init__(self, name, life): # Deve ser passado os pontos de ataque do inimigo?
+        super().__init__(name, life, [])  # Chama o construtor da superclasse Personagem
         
 
 # Exemplo de uso:
-# meu_personagem = Personagem("Herói", 100, 100, 20) -> Herói, 100hp, 100 mana, 20 atack
-# inimigo = inimigo("Zequinha Dragão", 50, 100, 10)
+# meu_personagem = Personagem("Herói", 100, [])
+# inimigo = Inimigo("Zequinha Dragão", 50)
