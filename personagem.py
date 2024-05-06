@@ -4,6 +4,12 @@ class Personagem:
         self.life = life
         self.attack_type = attack_type
 
+def getAttack(self, n):
+        if 0 <= n < len(self.attack_type):
+            return f"Ataque {n + 1} - {self.attack_type[n]}, custo de mana."
+        else:
+            return "Ataque inválido."
+
 class Mago(Personagem):
     def __init__(self, name):
         super().__init__(name, 70, ["Bola de fogo", "Espinho de gelo", "Missel arcano"])
