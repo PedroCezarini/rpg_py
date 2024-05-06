@@ -6,9 +6,9 @@ class Personagem(object): # Construtor superclasse
 
 class Inimigo(Personagem): # Construtor sub
     def __init__(self, name, life, attack):
-        super().__init__(nome, vida, ataque)  # Chama o construtor da superclasse Personagem
+        super().__init__(name, life, attack)  # Chama o construtor da superclasse Personagem
         
 
 # Exemplo de uso:
 # meu_personagem = Personagem("Herói", 100, 20)
-# inimigo = Inimigo("Inimigo 1", 50, 10, "Fácil")
+# inimigo = inimigo("Zequinha Dragão", 50, 10)
