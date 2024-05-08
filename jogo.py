@@ -1,104 +1,52 @@
-def pinta(char, cor, fundo):
-    print("\033[1;{};{}m{}".format(30+cor, 40+fundo, char), end="" )
+#####BLOCO DE CREDITOS:
+
+
+
+#####BLOCO DE IMPORTS
 
 import random
 
+#####BLOCO DE ARQUIVOS
+
 with open('mapa2.txt', 'r') as f:
-    l = [[int(num) for num in line.split()] for line in f]
-print(l)
+    big_mapa = [[int(num) for num in line.split()] for line in f]
+
 f.close()
 
 with open('blocos.txt', 'r') as f:
     blocos = [[ele for ele in line.split()] for line in f]
-print(blocos)
+
 f.close()
 
+#####MACRO BLOCO DE CLASSES
 
-for row in range(10):
-    for column in range(18):
-        
-        pinta( blocos[ l[row][column] ][1] ,int(blocos[l[row][column]][2]),int(blocos[l[row][column]][3]) )
-        
+##CLASSES GRAFICAS
+
+##CLASSES DE GAMEPLAY
+
+#-classe player
+class Player():
+    pos_y=0
+    pos_x=0
+    def __init__(self, pos_y, pos_x):
+        self.pos_y=pos_y
+        self.pos_x=pos_x
     
-    print()
 
-
-def desenhar_menu(tipo, mapa, alt, lat):
-    cabecalho(tipo)
-
-    pinta("",6,0)
-    print()
-    print(".", end="")
-    for i in range(lat+4):
-        print("-", end="")
-    print(".", end="")
-    print()
-
-    map_print(alt, lat, mapa)
-
-    
-    
-    print("'", end="")
-    for i in range(lat+4):
-        print("-", end="")
-    print("'", end="")
-    print()
-
-    rodape(tipo)
-    
-    
-def display_barra(tipo, atual, total):
-    if tipo =="HP":
-        cor = 1
+#-funcao que anda pelo mapa
+def mover(dire, p:Player, matriz):
+    if matriz[p.pos_y+dire[0]][p.pos_x+dire[1]] != 1:
+        p.pos_y+=dire[0]
+        p.pos_x+=dire[1]
     else:
-        cor = 4
-    
-    pinta("< {} :  {}/ {} \t> ||".format(tipo, atual, total), cor, -0)
-    for hp in range(atual):
-        pinta(" |", 0, cor)
-    for hp in range(total-atual):
-        pinta(" |", 0, 0)
-    pinta("|", 0,0)
-
-    
-def info_print(linha):
-    match linha:
-        case 0:
-            print("\t<<CHAR INFO>>\t", end="")
-        case 1:
-            display_barra("HP", 40, 40)
-        case 2:
-            display_barra("MP", 10, 10)
-        
-def map_print(alt, lat, mapa):
-    aux = 0
-    for row in range(alt):
-        pinta("|  ", 6, 8)
-        for column in range(lat):
-            
-            
-            pinta( blocos[ mapa[row][column] ][1] ,int(blocos[mapa[row][column]][2]),int(blocos[mapa[row][column]][3]) )
-            pinta("",0,0)
-
-        pinta("  |", 6, 8)
-        info_print(aux)
-        aux+=1
-        
-        
-        print()
+        print("não pode andar!")
 
 
-def pega_cor(tipo):
-    match tipo:
-        case "mapa":
-            return 6
-        case "combate":
-            return 1
-        case "evento":
-            return 3
-        case _:
-            print("avaliacao de cor inadequada")
+#####MACRO BLOCO DE FUNCOES
 
+##FUNCOES GRAFICAS
+
+#-funcao que desenha cabecalho de menus
 def cabecalho(tipo):
 
     cor = pega_cor(tipo)
@@ -115,7 +63,8 @@ def cabecalho(tipo):
 
     pinta("<-------------------------------->", cor, 0)
     pinta("",0,0)
-    
+
+#-funcao que desenha rodapes de menus  
 def rodape(tipo):
     cor = pega_cor(tipo)
     pinta("<-------------------------------->\n", cor, 0)
@@ -124,72 +73,139 @@ def rodape(tipo):
     print("|  s = baixo       d = direita   |")
     pinta("<-------------------------------->", cor, 0)
 
-desenhar_menu("mapa", l, 10, 10)
+#-funcao que desenha o mapa e derivados
+def map_print(mapa, p:Player):
+    aux = 0
+    for row in range(len(mapa)):
+        pinta("|  ", 6, 8)
+        for column in range(len(mapa[0])):
+            if row == p.pos_y and column== p.pos_x:
+                pinta("P",0,6)
+            else:
+                pinta( blocos[ mapa[row][column] ][1] ,int(blocos[mapa[row][column]][2]),int(blocos[mapa[row][column]][3]) )
+            pinta("",0,0)
 
-# def encontra_jogador(matriz_mapa):
-#     for i in range(len(matriz_mapa)):
+        pinta("  |", 6, 8)
+        info_print(aux)
+        aux+=1
         
-#         for j in range(len(matriz_mapa[0])):
-#             #print(matriz_mapa[i][j])
-#             if matriz_mapa[i][j]==11:
-#                 print("achei miseravel")
-#                 return i, j
+        
+        print()
 
-# class player:
-#     pos_x, pos_y = encontra_jogador(l)
+ 
+
+#-funcao que desenha menus
+def desenhar_menu(tipo, mapa, p:Player):
+    cabecalho(tipo)
+
+    pinta("",6,0)
+    print()
+    print(".", end="")
+    for i in range(len(mapa[0])+4):
+        print("-", end="")
+    print(".", end="")
+    print()
+
+    map_print(mapa, p)
+
     
+    
+    print("'", end="")
+    for i in range(len(mapa[0])+4):
+        print("-", end="")
+    print("'", end="")
+    print()
 
-# jose = player()
+    rodape(tipo)
+
+#-funcao que desenha barras de vida
+def display_barra(tipo, atual, total):
+    if tipo =="HP":
+        cor = 1
+    else:
+        cor = 4
+    
+    pinta("< {} :  {}/ {} \t> ||".format(tipo, atual, total), cor, -0)
+    for hp in range(atual):
+        pinta(" |", 0, cor)
+    for hp in range(total-atual):
+        pinta(" |", 0, 0)
+    pinta("|", 0,0)
+
+#-funcao de display lateral do mapa na tela mapa
+def info_print(linha):
+    match linha:
+        case 0:
+            print("\t<<CHAR INFO>>\t", end="")
+        case 1:
+            display_barra("HP", 40, 40)
+        case 2:
+            display_barra("MP", 10, 10)
+
+#-funcao que retorna uma cor tematica para cada tipo de menu
+def pega_cor(tipo):
+    match tipo:
+        case "mapa":
+            return 6
+        case "combate":
+            return 1
+        case "evento":
+            return 3
+        case _:
+            print("avaliacao de cor inadequada")
 
 
-# print(jose.pos_y, jose.pos_x)
 
-matriz= [[1, 1, 1, 1, 1],
-         [1, 0, 0, 0, 1],
-         [1, 0, 2, 0, 1],
-         [1, 0, 0, 0, 1],
-         [1, 1, 1, 1, 1]]
+##FUNCOES DE GAMEPLAY
 
-matriz_cp = matriz.copy()
-print_matrix(matriz_cp)
 
-def removedor_de_player(matriz_original):
-    for i in range(len(matriz)):
-        for j in range(len(matriz[0])):
-            if matriz[i][j] == 2:
-                matriz[i][j]=0
 
-removedor_de_player(matriz)
-print_matrix(matriz)
+##FUNCOES DE UTILIDADE PUBLICA
 
+#-funcao que possibilita pintar caracteres e o fundo
+def pinta(char, cor, fundo):
+    print("\033[1;{};{}m{}".format(30+cor, 40+fundo, char), end="" )
+
+#-print basicao de matrizes
 def print_matrix(matriz):
     for i in range(len(matriz)):
         print("[", end="")
-        for j in range(len(matriz)):
-            print("{},\t".format(matriz[i][j]),end="")
-        print("\b\b]")
+        for j in range(len(matriz[0])):
+            print("{},".format(matriz[i][j]),end="")
+        print("\b]")
 
+#-funcao de obtencao de direcoes cardinais com base em wasd
 def obter_dire(letra):
     match letra:
         case "a":
-            return 0, -1 
+            return [0, -1 ]
         case "s":
-            return +1, 0
+            return [+1, 0]
         case "d":
-            return 0, +1
+            return [0, +1]
         case "w":
-            return -1, 0
+            return [-1, 0]
         case _:
             print("Inpute errado")
 
-def mover(dire, pos_x, pos_y, matriz, matriz_nova):
-    if matriz[pos_y+dire[0]][pos_x+dire[1]] != 1:
-        matriz_nova[pos_y+dire[0]][pos_x+dire[1]] = 2
-        matriz_nova[pos_y][pos_x]= matriz[pos_y][pos_x]
 
-        
-    else:
-        print("não pode andar!")
+#####BLOCO GAMEPLAY LOOP
+
+p = Player(1,1)
+desenhar_menu("mapa", big_mapa, p)
+
     
+
+
+
+
+########
     
-    
+
+
+for i in range(0,10):
+    mover(obter_dire(input()), p, big_mapa)
+    # print("{} - y {} - x".format(p.pos_y, p.pos_x))
+    desenhar_menu("mapa", big_mapa, p)
+
+
