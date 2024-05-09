@@ -31,7 +31,7 @@ f.close()
 #-classe autoexplicativa
 class SelecaoPersonagem:
 
-    
+    classe = 0
 
     def menu(self):
 
@@ -44,15 +44,14 @@ class SelecaoPersonagem:
             self.menu_herois = [[ele for ele in line.split()] for line in f]
 
         f.close()
-
+        pinta("", 3, 0)
         menus_em_geral(self.menu_principal)
         input()
 
         menus_em_geral(self.menu_herois)
 
     
-        global x 
-        x = int(input())
+        self.classe = int(input())
 
             #chamadas para começar a briga
         
@@ -84,16 +83,18 @@ class Fight:
         print('Digite 3 para usar %s - 6 de mana' % poder3)
 
     #Função com todo o codigo procedural da luta, onde realmente a mágica acontece
-    def enter(self):
+    def enter(self, escolha:int):
 
-        pinta("",1,0)
+        pinta("\n\n",1,0)
         #sets que dependem de uma variável global definida no menu de personagems
-        if x == 1:  # set do personagem mago
+        if escolha == 1:  # set do personagem mago
             personagem = Personagem("Magnus, o Mago", 70, 100, "Bola de fogo", "Espinho de gelo", "Míssel Arcano")
-        elif x == 2:  # set do personagem guerreiro
+        elif escolha == 2:  # set do personagem guerreiro
             personagem = Personagem("Absalom, o Cavalheiro", 100, 50, "Golpe giratório", "Golpe perfurante", "Rasga bucho")
-        elif x == 3:  # set do personagem Ladino
+        elif escolha == 3:  # set do personagem Ladino
             personagem = Personagem("Febror, o Ladino", 80, 60, "Ataque das sombras", "Golpe fantasma", "Lâmina das trevas")
+
+        
 
         #sets que dependem de uma variável global na escolha de inimigo
         if y == 1: # set do inimigo "cobrinha"
@@ -282,7 +283,9 @@ def menus_em_geral(menu):
     for i in range(len(menu)):
         for l in range(len(menu[i])):
             print(menu[i][l], end=" ")
-        print()
+        
+        pinta("\n", 3, 0)
+        
 
 #-funcao que desenha cabecalho de menus
 def cabecalho(tipo):
@@ -398,10 +401,10 @@ def pega_cor(tipo):
 
         
 #-funcao que verifica se o espaco precisa de um salve:
-def verifica_pos(p:Player):
+def verifica_pos(p:Player, per:SelecaoPersonagem):
     if p.pos_y==11  and p.pos_x==9:
         a_fight = Fight()
-        a_fight.enter()
+        a_fight.enter(per.classe)
 
 ##FUNCOES DE UTILIDADE PUBLICA
 
@@ -457,7 +460,7 @@ desenhar_menu("mapa", big_mapa, p)
 
 for i in range(0,99):
 
-    verifica_pos(p)
+    verifica_pos(p, per)
     mover(obter_dire(input()), p, big_mapa)
     # print("{} - y {} - x".format(p.pos_y, p.pos_x))
     desenhar_menu("mapa", big_mapa, p)
